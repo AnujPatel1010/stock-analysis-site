@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anuj Patel — Independent Stock Analysis</title>
+<style>
+  :root {
+    --bg: #0a0b0d;
+    --bg-card: #111317;
+    --bg-card-hover: #15181d;
+    --text: #f4f5f7;
+    --text-soft: #d7dade;
+    --text-muted: #9aa0aa;
+    --text-faint: #6b7280;
+    --border: #20232a;
+    --border-soft: #191c22;
+    --accent: #d8b25e;
+    --accent-soft: rgba(216, 178, 94, 0.14);
+    --maxw: 760px;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 24px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    padding: 64px 0 30px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+  .masthead-name {
+    font-family: var(--serif);
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    cursor: pointer;
+    display: inline-block;
+    line-height: 1.1;
+  }
+  .masthead-name:hover { color: #fff; }
+  .masthead-sub {
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .masthead-desc {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 560px;
+  }
+
+  main { flex: 1 0 auto; padding-top: 26px; }
+
+  /* ---------- Shared chips/meta ---------- */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .entry-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 9px;
+    border-radius: 4px;
+  }
+  .entry-meta {
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* ---------- List view ---------- */
+  .entry {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 26px 28px 24px;
+    margin-bottom: 18px;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+  }
+  .entry:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border);
+    transform: translateY(-2px);
+  }
+  .entry-title {
+    font-family: var(--serif);
+    font-size: 23px;
+    line-height: 1.32;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12px;
+    transition: color 0.15s ease;
+  }
+  .entry:hover .entry-title { color: #fff; }
+  .entry-summary {
+    font-size: 16px;
+    line-height: 1.62;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .read-more {
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .read-more .arrow { transition: transform 0.18s ease; }
+  .entry:hover .read-more .arrow { transform: translateX(4px); }
+
+  /* ---------- Article view ---------- */
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    cursor: pointer;
+  }
+  .back:hover { color: var(--text); }
+
+  .article-title {
+    font-family: var(--serif);
+    font-size: 36px;
+    line-height: 1.22;
+    font-weight: 600;
+    margin: 14px 0 18px;
+    letter-spacing: -0.01em;
+  }
+  .article-deck {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0 0 30px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article-body p {
+    font-family: var(--serif);
+    font-size: 18.5px;
+    line-height: 1.78;
+    color: var(--text-soft);
+    margin: 0 0 24px;
+  }
+  .article-body h2 {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    margin: 46px 0 18px;
+    padding-top: 6px;
+  }
+  .article-body h2::before {
+    content: "";
+    display: block;
+    width: 32px;
+    height: 2px;
+    background: var(--accent);
+    margin-bottom: 18px;
+    border-radius: 2px;
+  }
+  .article-body ul {
+    margin: 0 0 24px;
+    padding-left: 4px;
+    list-style: none;
+  }
+  .article-body li {
+    font-family: var(--serif);
+    font-size: 18.5px;
+    line-height: 1.7;
+    color: var(--text-soft);
+    margin: 0 0 14px;
+    padding-left: 24px;
+    position: relative;
+  }
+  .article-body li::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 13px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .article-body .source {
+    font-size: 14px;
+    color: var(--text-faint);
+    font-style: italic;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  /* ---------- Footer ---------- */
+  .site-footer {
+    flex-shrink: 0;
+    margin-top: 64px;
+    padding: 30px 0 48px;
+    border-top: 1px solid var(--border);
+  }
+  .disclaimer {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+  }
+  .copyright {
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 600px) {
+    .masthead { padding: 44px 0 26px; }
+    .masthead-name { font-size: 28px; }
+    .entry { padding: 22px 20px 20px; }
+    .entry-title { font-size: 21px; }
+    .article-title { font-size: 28px; }
+    .article-deck { font-size: 17px; }
+    .article-body p, .article-body li { font-size: 17.5px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div class="masthead-name" onclick="goHome()">Anuj Patel</div>
+      <div class="masthead-sub">Independent Stock Analysis</div>
+      <p class="masthead-desc">Deep-dive research on individual companies and securities — separating the signal from the noise, one analysis at a time.</p>
+    </header>
+
+    <main id="view"></main>
+
+    <footer class="site-footer">
+      <p class="disclaimer">For informational and educational purposes only. Nothing on this site constitutes investment advice, a recommendation, or an offer to buy or sell any security. Do your own research.</p>
+      <p class="copyright">© 2026 Anuj Patel · Independent Stock Analysis</p>
+    </footer>
+  </div>
+
+<script>
+/* =========================================================================
+   ADD NEW ANALYSES HERE.
+   The newest entry goes at the TOP of this array so it shows up first.
+   Each entry needs: id, tag, title, date, summary, and content (HTML).
+   - tag: a short label/ticker shown as a chip (e.g. "AAPL", "Earnings")
+   - In `content`, use <h2> for section headers, <p> for paragraphs,
+     and <ul><li> for bullet lists.
+   Reading time is calculated automatically from the content.
+   ========================================================================= */
+const ANALYSES = [
+
+  {
+    id: "nok-2026-06",
+    tag: "NOK",
+    title: "Nokia (NOK) at $13.49: A Telecom Laggard Repriced as an AI Stock",
+    date: "June 18, 2026",
+    summary: "Nokia roughly tripled off its low as the market recast it from a slow telecom-equipment maker into an AI-infrastructure play — but at ~100x earnings, the question is whether the price has moved further than the business.",
+    content: `
+      <p>A year ago Nokia traded near $4. It has since climbed as high as $17.45 and closed today at $13.49, more than double where it started the year even after a recent pullback. For two decades Nokia was a story of decline, a former mobile-phone giant reduced to a slow-growing maker of telecom equipment. In 2026 the market decided it was something else: an artificial intelligence (AI) infrastructure company. The stock roughly tripled off its low on that idea. The question now is not whether the transformation is real, because parts of it clearly are, but whether the price has moved further than the business has.</p>
+
+      <h2>The Business</h2>
+      <p>Nokia is a Finnish networking-equipment company that has reinvented itself several times since exiting the phone business. As of January 2026 it operates in two segments. Network Infrastructure, which management treats as the growth engine, covers optical networking, internet protocol (IP) routing, fixed broadband, and the data-center networking gear that moves traffic between and inside the facilities running AI workloads. Mobile Infrastructure covers the core and radio-access network equipment that telecom carriers buy, along with Technology Standards, the patent-licensing unit that collects high-margin royalties on Nokia's cellular intellectual property and produces steady cash flow regardless of equipment sales.</p>
+      <p>The person driving the repositioning is chief executive officer (CEO) Justin Hotard, who took over in April 2025 after leading Intel's data center and AI group. Under Hotard, Nokia has reoriented toward the data center, anchored by its $2.3 billion acquisition of Infinera, an optical-networking and chip company that closed in early 2026 and gave Nokia far greater scale selling optical gear to cloud operators such as Amazon, Microsoft, and Alphabet.</p>
+
+      <h2>Why the Stock Tripled</h2>
+      <p>The re-rating came from a cluster of events that reframed the entire company. In October 2025, Nvidia announced a strategic partnership with Nokia and invested $1 billion in the company at $6.01 per share, aimed at building AI into radio-access networks, the equipment that connects phones to the network, and into next-generation sixth-generation (6G) systems. An endorsement from the most important company in AI hardware, accompanied by a check, changed how investors saw the stock almost overnight.</p>
+      <p>The financial results gave the narrative something to stand on. In the first quarter of 2026, Nokia's revenue from AI and cloud customers jumped 49%, the company reported roughly €1 billion in optical orders from hyperscale cloud operators, and operating profit rose 54%. Hotard pointed to an optical market growing faster than in past cycles because of the AI build-out, with the product line moving quickly from 800-gigabit capacity toward 1.6 and 3.2 terabit. Analysts followed the price higher. Morgan Stanley, Bank of America, and Northland all raised their targets, with Northland going to $20. A stock that had spent years as a turnaround story became a momentum favorite.</p>
+
+      <h2>The Bear Case</h2>
+      <p>The skeptical view is that the AI label has outrun the actual business. Most of Nokia's revenue still comes from the slow, cyclical, fiercely competitive market for telecom equipment, where it fights Ericsson, Huawei, ZTE, and Samsung for carrier budgets that grow little from year to year. Total revenue rose only about 3.5% in 2025 and 2% in the first quarter of 2026. More troubling, net income fell roughly 49% in 2025, so profitability went backward during the same stretch the stock tripled. The fastest-growing and most heavily promoted piece, AI radio-access networks, is not expected to ramp in volume until 2027, which means a meaningful part of the thesis is a promise rather than current revenue. Nokia also carries a long history of execution missteps and repeated restructurings, and at roughly 100 times earnings the stock now prices in success that has not yet reached the bottom line. The recent decline of nearly 18% from the high is a reminder that a momentum stock moves in both directions.</p>
+
+      <h2>The Bull Case</h2>
+      <p>The constructive view is that this is a genuine transformation led by a credible operator, not a relabeling. The optical and data-center exposure is real and already producing growth, with the 49% jump in AI and cloud revenue and the €1 billion in hyperscaler optical orders standing as evidence rather than projection. The Infinera acquisition gives Nokia scale in exactly the optical-interconnect market that the AI capital-spending cycle is expanding. The Nvidia partnership and investment provide both validation and a direct path into AI radio-access networks alongside partners such as T-Mobile and Dell. Nokia's patent-licensing unit generates steady, high-margin cash regardless of the equipment cycle, and its standing as a trusted Western alternative to Huawei opens defense and sovereign-network demand, which Nokia is building into a dedicated unit. A restructuring program targeting about €1.2 billion in annual cost savings by the end of 2026 means more of any future revenue growth should reach profit. If the data-center momentum compounds and the AI radio-access ramp arrives on schedule, today's earnings will look very different in two years.</p>
+
+      <h2>Valuation</h2>
+      <p>Nokia now trades at roughly 100 times trailing earnings and around three times sales, multiples that have nothing in common with the telecom-equipment company it was eighteen months ago. That is the entire point. The market has already re-rated Nokia from a value stock priced on a low-growth equipment business to a growth stock priced on an AI-infrastructure future. The cheapness that defined the investment case at $4 is gone.</p>
+      <p>What an investor buys at $13.49 is therefore not a discount but a transformation that is assumed to succeed. The pieces that justify the optimism are real. Optical networking is genuinely growing, the Nvidia relationship is genuine, and the cost structure is leaner than it was. But those pieces sit on top of a core business that still grows in the low single digits and earns less than it did a year ago, and the highest-growth part of the story does not ramp until 2027. At 100 times earnings, the risk has shifted. The question is no longer whether Nokia can pivot toward AI infrastructure, because it already has. The question is whether a pivot that is real but early, and still a minority of the business, can grow into a valuation that already assumes it worked. A year ago the market paid almost nothing for that possibility. Today it is paying in full.</p>
+
+      <p class="source">Data via Nokia investor relations, Nvidia, CNBC, Yahoo Finance, StockAnalysis, and DataCenterDynamics.</p>
+    `
+  },
+
+  {
+    id: "xndu-2026-06",
+    tag: "XNDU",
+    title: "Xanadu (XNDU) at $13.37: A Quantum Bet Trading on Everything Except Its Financials",
+    date: "June 18, 2026",
+    summary: "With ~$6.75M in revenue and a $3.9B market cap, Xanadu trades on a tug-of-war between government funding and a flood of sellable shares — not its fundamentals, which are close to meaningless here.",
+    content: `
+      <p>Xanadu Quantum Technologies closed today at $13.37. Over the past month the stock has fallen roughly 62%. Over the past quarter it is up roughly 82%. Its 52-week range runs from $6.97 to $42.44. For a company with a market capitalization around $3.9 billion and trailing twelve-month revenue of about $6.75 million, almost none of that movement has anything to do with the underlying financials. XNDU trades on two opposing forces: a wave of government funding and quantum-sector enthusiasm pushing it up, and a structural flood of new sellable shares pulling it down. That tug-of-war, not any traditional measure of value, is the company's actual story.</p>
+
+      <h2>The Business</h2>
+      <p>Xanadu is a Canadian company, headquartered in Toronto and founded in 2016, that builds photonic quantum computers. "Photonic" means its qubits, the basic units of quantum computation, are encoded in particles of light rather than in superconducting circuits or trapped ions, the approaches used by IBM and IonQ respectively. The company's argument is that a light-based architecture can be built using semiconductor-compatible manufacturing, which in theory makes it easier to scale than competing methods.</p>
+      <p>In March 2026 Xanadu became the first publicly listed pure-play photonic quantum computing company, completing a merger with Crane Harbor Acquisition Corp., a special purpose acquisition company (SPAC). The deal added about $302 million in gross proceeds to its balance sheet. Its flagship system is Aurora, described as a modular, networked photonic quantum computer with real-time error correction. In 2025 the company reported demonstrating 12 logical qubits with real-time error correction and a 60% reduction in optical loss, both meaningful milestones in a field where error rates are the central obstacle. Xanadu also maintains PennyLane, a widely used open-source software library for quantum programming, which gives it a foothold in the developer community independent of its hardware.</p>
+
+      <h2>Why the Stock Is Down 62% in a Month</h2>
+      <p>The collapse over the past month was not about the technology or the financial results. It was about share supply. In April the company filed to register the resale of up to 293.7 million existing shares held by insiders, sponsors, and early investors. That filing does not raise money for Xanadu, but it dramatically expands the supply of stock that can legally be sold into the market, which creates a persistent overhang on the price. Then on June 1 the United States Securities and Exchange Commission (SEC) declared effective a separate filing tied to a standby equity purchase agreement with an investor called Yorkville. That agreement gives Xanadu the right to sell up to $300 million of new shares over time at 97.5% of the market price. It is a flexible source of capital for the company, but it also means the share count can keep climbing, and the stock fell about 13% on the news.</p>
+      <p>The result is a clear and repeating pattern. Funding announcements and technical milestones spike the stock higher, then dilution-related filings and the steady weight of registered resale shares grind it back down. The 62% monthly decline is the dilution side of that cycle asserting itself.</p>
+
+      <h2>The Bear Case</h2>
+      <p>The bear case is that none of the long-term promise protects holders from what happens between now and whenever commercialization arrives. The company generates almost no revenue, loses tens of millions of dollars per quarter, and is funding part of its operations through an equity facility that directly increases the share count. The 293.7 million registered resale shares represent a large standing supply of stock that can be sold at any time, which caps rallies. The major government funding remains conditional and subject to final agreements rather than committed cash. The broader quantum sector is driven heavily by sentiment, and a shift in risk appetite can compress every name in the group at once, as recent profit-taking across IonQ, Rigetti, and D-Wave demonstrated. Commercial, fault-tolerant quantum computing is widely regarded as years away, and the distance between a scientific milestone and a paying customer is long.</p>
+
+      <h2>The Bull Case</h2>
+      <p>The bull case is that Xanadu is a differentiated, well-connected company in a field that governments have decided to fund aggressively. It is the only pure-play photonic option available to public investors, and the photonic approach carries a credible long-term scaling argument through semiconductor manufacturing. Xanadu is in negotiations with the governments of Canada and Ontario for up to CAD $390 million (Canadian dollars, roughly $285 million U.S.) under an initiative called Project OPTIMISM to build domestic photonic and semiconductor manufacturing. It has advanced to Stage B of the United States Defense Advanced Research Projects Agency (DARPA) Quantum Benchmarking Initiative, which carries up to $15 million in funding and a potential path to a larger Stage C, and it was selected for Canada's Quantum Champions Program for up to CAD $23 million more. Partnerships with Nvidia, AMD, and Oak Ridge National Laboratory add credibility. The two analysts covering the stock rate it a strong buy with an average price target of $44, well above the current price. If quantum computing reaches commercial utility within the decade and Xanadu's architecture is among the winners, today's market capitalization could prove small.</p>
+
+      <h2>Valuation</h2>
+      <p>There is no conventional way to value XNDU, and that is the most important thing to understand about the price. Revenue in 2025 was $4.62 million, up 190% from the prior year, and first-quarter 2026 revenue was $2.83 million, roughly four times the year-earlier quarter. Those growth rates look dramatic until you account for the fact that most of the revenue comes from government research programs rather than commercial sales. The company lost $70.67 million in 2025, carries a trailing twelve-month net loss near $79 million, and holds roughly $272 million in cash. At today's price the stock trades at more than 500 times trailing revenue. No earnings multiple or discounted cash flow model produces a meaningful figure for a business at this stage.</p>
+      <p>What stands in for valuation here is runway against burn. The real question is whether the roughly $272 million in cash, plus the pending CAD $390 million in government funding if it is finalized, carries the company to commercial relevance before continued dilution erodes what each share represents. The $44 analyst target is not a statement about current fundamentals; it is a bet on the 2029 to 2030 thesis of a working quantum data center. Strip away the long-term story and the near-term price is governed by something far more mechanical: a fixed and growing supply of shares meeting a fluctuating level of enthusiasm. At more than 500 times sales, with nearly 294 million resale shares overhanging the market and a $300 million equity facility available to draw on, the price already embeds a commercialization outcome that is years away and still conditional. That is a specific and aggressive thing for the market to treat as its base case, and it is why the stock can move 60% in either direction without a single number in the financials changing.</p>
+
+      <p class="source">Data via Xanadu investor relations and SEC filings, TipRanks, Yahoo Finance, StockAnalysis, and Tickeron.</p>
+    `
+  },
+
+  {
+    id: "intu-2026-06",
+    tag: "INTU",
+    title: "Intuit (INTU) at $267: Value Trap or the Most Hated Good Business in America?",
+    date: "June 18, 2026",
+    summary: "Down 67% to $267 even after beating guidance, Intuit looks like a value trap to Wall Street — but a dead regulatory threat, accelerating buybacks, and 11x earnings suggest the bear case is being priced as the base case.",
+    content: `
+      <p>A year ago, Intuit traded at $813. Today it closed at $267. The company has lost over $131 billion in market value since last July, a 67% collapse from its all-time high, making it the worst-performing stock in the Nasdaq 100 and only the second time in its history it has dropped this far, exceeded only by the 72% decline during the Dot-Com bust.</p>
+
+      <p>What makes this unusual is the context of that collapse. The most recent leg down came after Intuit beat its own guidance and raised its full-year forecast. The business is growing. The stock is not. That disconnect is the whole story.</p>
+
+      <h2>The Business</h2>
+      <p>Intuit owns four products: TurboTax for tax filing, QuickBooks for small business accounting, Credit Karma for credit monitoring, and Mailchimp for small business marketing. The reason this company has compounded revenue at nearly 19% annually over five years is not that these are exciting products. It is that they are deeply embedded in the workflows of millions of small businesses and households who would face real costs in time, data migration, and relearning to switch. QuickBooks in particular carries extreme switching costs inside accounting ecosystems and certified public accountant (CPA) workflows, making migration away from it operationally prohibitive. Boring, essential, and sticky.</p>
+
+      <h2>Why the Stock Is Down 67%</h2>
+      <p>Two threats converged on Intuit in 2025 and 2026, both aimed at TurboTax.</p>
+      <p>The first was the Internal Revenue Service's (IRS) Direct File program, a free government tool that allowed taxpayers to file taxes directly with the IRS. In the 2025 tax season, the IRS expanded it to 25 states, covering over 30 million eligible taxpayers. The premise of TurboTax begins to erode when the government offers to do the same job for free.</p>
+      <p>The second threat is artificial intelligence (AI). Goldman Sachs analyst Gabriela Borges, who recently downgraded Intuit to Sell, believes TurboTax faces an existential threat from a new generation of AI-powered tax-filing tools. If a free AI can walk a filer through their return as effectively as TurboTax, the value proposition of paying $100 a year for the software breaks down. Technically, the stock signaled trouble early. A Death Cross formed in November 2025, where the 50-day moving average crossed below the 200-day moving average. The stock never recovered, eventually breaking below $400 in February 2026.</p>
+
+      <h2>The Bear Case</h2>
+      <p>TurboTax accounts for roughly 25% of Intuit's total revenue. Management already acknowledged pressure among price-sensitive do-it-yourself (DIY) filers earning less than $50,000 a year on the Q3 earnings call, and said they need to "evolve the business model" for that segment. The concern is structural: TurboTax's core value proposition is explaining a confusing process to someone who does not want to deal with it. That is precisely what AI does well, and increasingly for free.</p>
+
+      <h2>The Bull Case</h2>
+      <p>Three things push back on that narrative.</p>
+      <p>The IRS Direct File threat is gone. The Trump administration suspended the program in November 2025, and the IRS confirmed it would not be available in 2026. The single largest regulatory threat to Intuit's business has been eliminated, and the stock has not reflected it.</p>
+      <p>TurboTax's own AI product is growing. TurboTax Live, the hybrid AI and human expert tier, is projected to grow 36% to roughly $2.8 billion this fiscal year. That is not a company retreating from AI disruption. It is a company using AI to charge more for an upgraded service tier.</p>
+      <p>QuickBooks is not going anywhere. QuickBooks Advanced is expanding 38%, and the switching costs embedded in small business accounting make displacement extremely difficult. The AI disruption narrative is almost entirely a TurboTax story. QuickBooks does not have a credible challenger.</p>
+
+      <h2>Valuation</h2>
+      <p>Intuit is guiding for non-GAAP earnings per share (EPS) of $23.83 at the midpoint this fiscal year. At $267, that is roughly 11 times forward earnings. For context, the broader enterprise software sector has historically traded at 30 to 40 times earnings. Adobe, a comparable software company facing similar AI fears, also trades around 11 times forward earnings against a 20-year historical average price-to-earnings (P/E) ratio of nearly 38 times.</p>
+      <p>A discounted cash flow (DCF) analysis using Intuit's $9.2 billion in free cash flow produces a blended intrinsic value of roughly $1,126 per share, with a bear case of $480 and a bull case of $1,791. Even the bear case is nearly twice today's price.</p>
+      <p>Management's capital allocation is notable. Intuit repurchased $1.6 billion of its own stock in the third quarter alone, more than double the same quarter last year, and the board approved a new $8 billion buyback authorization. The quarterly dividend was raised 15% to $1.20 per share. When a company doubles its buyback pace while Wall Street calls it a sell, one of them is mispricing the asset.</p>
+      <p>At 11 times earnings on a business still growing revenue at 13 to 14%, with a dead regulatory threat, accelerating capital returns, and a growing AI-assisted revenue tier, the bear case requires near-total displacement of TurboTax's franchise to justify the current price. That is a very specific and aggressive outcome for the market to be pricing as the base case.</p>
+
+      <p class="source">Data via Intuit investor relations, CNBC, Simply Wall St, Goldman Sachs, and Yahoo Finance.</p>
+    `
+  }
+
+];
+
+/* ========================================================================= */
+
+const view = document.getElementById("view");
+
+function readingTime(html) {
+  const text = html.replace(/<[^>]+>/g, " ");
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+function renderList() {
+  if (ANALYSES.length === 0) {
+    view.innerHTML = '<p style="color:var(--text-muted)">No analyses yet.</p>';
+    return;
+  }
+  const html = ANALYSES.map((a) => {
+    return `
+      <article class="entry" onclick="openAnalysis('${a.id}')">
+        <div class="entry-top">
+          <span class="entry-meta">${a.date} &middot; ${readingTime(a.content)} min read</span>
+        </div>
+        <h2 class="entry-title">${a.title}</h2>
+        <p class="entry-summary">${a.summary}</p>
+      </article>`;
+  }).join("");
+  view.innerHTML = html;
+  window.scrollTo(0, 0);
+}
+
+function renderArticle(a) {
+  view.innerHTML = `
+    <div class="back" onclick="goHome()">&larr; All analyses</div>
+    <div class="entry-top">
+      <span class="entry-meta">${a.date} &middot; ${readingTime(a.content)} min read</span>
+    </div>
+    <h1 class="article-title">${a.title}</h1>
+    <p class="article-deck">${a.summary}</p>
+    <div class="article-body">${a.content}</div>
+  `;
+  window.scrollTo(0, 0);
+}
+
+function openAnalysis(id) {
+  location.hash = id;
+}
+
+function goHome() {
+  location.hash = "";
+}
+
+function route() {
+  const id = decodeURIComponent(location.hash.replace(/^#/, ""));
+  const a = id && ANALYSES.find(x => x.id === id);
+  if (a) renderArticle(a);
+  else renderList();
+}
+
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
