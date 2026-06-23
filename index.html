@@ -285,6 +285,30 @@
     color: var(--text-faint);
   }
 
+/* ---------- Search ---------- */
+  .search-wrap {
+    margin-bottom: 24px;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .search-input::placeholder { color: var(--text-faint); }
+  .search-input:focus { border-color: var(--accent); }
+  .no-results {
+    color: var(--text-muted);
+    font-size: 16px;
+    padding: 6px 2px;
+  }
+
   /* ---------- Responsive ---------- */
   @media (max-width: 600px) {
     .masthead { padding: 44px 0 26px; }
@@ -454,13 +478,8 @@ function readingTime(html) {
   return Math.max(1, Math.round(words / 200));
 }
 
-function renderList() {
-  if (ANALYSES.length === 0) {
-    view.innerHTML = '<p style="color:var(--text-muted)">No analyses yet.</p>';
-    return;
-  }
-  const html = ANALYSES.map((a) => {
-    return `
+function entryCardHTML(a) {
+  return `
       <article class="entry" onclick="openAnalysis('${a.id}')">
         <div class="entry-top">
           <span class="entry-meta">${a.date} &middot; ${readingTime(a.content)} min read</span>
@@ -468,8 +487,37 @@ function renderList() {
         <h2 class="entry-title">${a.title}</h2>
         <p class="entry-summary">${a.summary}</p>
       </article>`;
-  }).join("");
-  view.innerHTML = html;
+}
+
+function renderResults(query) {
+  const results = document.getElementById("list-results");
+  if (!results) return;
+  const q = query.trim().toLowerCase();
+  const matches = q
+    ? ANALYSES.filter(a => a.title.toLowerCase().includes(q))
+    : ANALYSES;
+  if (matches.length === 0) {
+    results.innerHTML = '<p class="no-results">No analyses match that search.</p>';
+    return;
+  }
+  results.innerHTML = matches.map(entryCardHTML).join("");
+}
+
+function renderList() {
+  if (ANALYSES.length === 0) {
+    view.innerHTML = '<p style="color:var(--text-muted)">No analyses yet.</p>';
+    return;
+  }
+  view.innerHTML = `
+    <div class="search-wrap">
+      <input id="search-input" class="search-input" type="text"
+             placeholder="Search analyses by title..."
+             autocomplete="off"
+             oninput="renderResults(this.value)" />
+    </div>
+    <div id="list-results"></div>
+  `;
+  renderResults("");
   window.scrollTo(0, 0);
 }
 
