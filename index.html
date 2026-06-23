@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Anuj Patel — Independent Stock Analysis</title>
+<title>Anuj Patel · Independent Stock Analysis</title>
 <style>
   :root {
     --bg: #0a0b0d;
@@ -76,6 +76,29 @@
     line-height: 1.6;
     color: var(--text-muted);
     max-width: 560px;
+  }
+
+  /* ---------- Top nav ---------- */
+  .masthead-nav {
+    display: flex;
+    gap: 28px;
+    margin-top: 22px;
+  }
+  .nav-link {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 12px 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .nav-link:hover { color: var(--text); }
+  .nav-link.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
   main { flex: 1 0 auto; padding-top: 26px; }
@@ -279,7 +302,11 @@
     <header class="masthead">
       <div class="masthead-name" onclick="goHome()">Anuj Patel</div>
       <div class="masthead-sub">Independent Stock Analysis</div>
-      <p class="masthead-desc">Deep-dive research on individual companies and securities — separating the signal from the noise, one analysis at a time.</p>
+      <p class="masthead-desc">Deep-dive research on individual companies and securities, separating the signal from the noise, one analysis at a time.</p>
+      <nav class="masthead-nav">
+        <a class="nav-link" id="nav-home" onclick="goHome()">Analyses</a>
+        <a class="nav-link" id="nav-about" onclick="goAbout()">About</a>
+      </nav>
     </header>
 
     <main id="view"></main>
@@ -307,7 +334,7 @@ const ANALYSES = [
     tag: "NOK",
     title: "Nokia (NOK) at $13.49: A Telecom Laggard Repriced as an AI Stock",
     date: "June 18, 2026",
-    summary: "Nokia roughly tripled off its low as the market recast it from a slow telecom-equipment maker into an AI-infrastructure play — but at ~100x earnings, the question is whether the price has moved further than the business.",
+    summary: "Nokia roughly tripled off its low as the market recast it from a slow telecom-equipment maker into an AI-infrastructure play. At about 100 times earnings, the question is whether the price has moved further than the business.",
     content: `
       <p>A year ago Nokia traded near $4. It has since climbed as high as $17.45 and closed today at $13.49, more than double where it started the year even after a recent pullback. For two decades Nokia was a story of decline, a former mobile-phone giant reduced to a slow-growing maker of telecom equipment. In 2026 the market decided it was something else: an artificial intelligence (AI) infrastructure company. The stock roughly tripled off its low on that idea. The question now is not whether the transformation is real, because parts of it clearly are, but whether the price has moved further than the business has.</p>
 
@@ -338,7 +365,7 @@ const ANALYSES = [
     tag: "XNDU",
     title: "Xanadu (XNDU) at $13.37: A Quantum Bet Trading on Everything Except Its Financials",
     date: "June 18, 2026",
-    summary: "With ~$6.75M in revenue and a $3.9B market cap, Xanadu trades on a tug-of-war between government funding and a flood of sellable shares — not its fundamentals, which are close to meaningless here.",
+    summary: "With about $6.75M in revenue and a $3.9B market cap, Xanadu trades on a tug-of-war between government funding and a flood of sellable shares, not its fundamentals, which are close to meaningless here.",
     content: `
       <p>Xanadu Quantum Technologies closed today at $13.37. Over the past month the stock has fallen roughly 62%. Over the past quarter it is up roughly 82%. Its 52-week range runs from $6.97 to $42.44. For a company with a market capitalization around $3.9 billion and trailing twelve-month revenue of about $6.75 million, almost none of that movement has anything to do with the underlying financials. XNDU trades on two opposing forces: a wave of government funding and quantum-sector enthusiasm pushing it up, and a structural flood of new sellable shares pulling it down. That tug-of-war, not any traditional measure of value, is the company's actual story.</p>
 
@@ -369,7 +396,7 @@ const ANALYSES = [
     tag: "INTU",
     title: "Intuit (INTU) at $267: Value Trap or the Most Hated Good Business in America?",
     date: "June 18, 2026",
-    summary: "Down 67% to $267 even after beating guidance, Intuit looks like a value trap to Wall Street — but a dead regulatory threat, accelerating buybacks, and 11x earnings suggest the bear case is being priced as the base case.",
+    summary: "Down 67% to $267 even after beating guidance, Intuit looks like a value trap to Wall Street. But a dead regulatory threat, accelerating buybacks, and 11x earnings suggest the bear case is being priced as the base case.",
     content: `
       <p>A year ago, Intuit traded at $813. Today it closed at $267. The company has lost over $131 billion in market value since last July, a 67% collapse from its all-time high, making it the worst-performing stock in the Nasdaq 100 and only the second time in its history it has dropped this far, exceeded only by the 72% decline during the Dot-Com bust.</p>
 
@@ -403,6 +430,19 @@ const ANALYSES = [
   }
 
 ];
+
+/* =========================================================================
+   ABOUT PAGE CONTENT.
+   Edit the text below to change your About page. Same rules as an analysis:
+   <p> for paragraphs, <h2> for section headers. Swap the email and LinkedIn
+   placeholders for your real ones.
+   ========================================================================= */
+const ABOUT_HTML = `
+  <p>I'm Anuj Patel, a high school student with a serious interest in financial markets, investing, and the businesses behind the tickers.</p>
+  <p>This site is where I publish independent equity research: deep dives on individual companies where I work through the bull case, the bear case, and what the current price is actually assuming about the future. I try to write the kind of analysis I would want to read, with the reasoning shown and the hype left out.</p>
+  <p>I am drawn to the same kind of problem in other places too, including baseball analytics, where the distance between the surface numbers and what is really happening is its own research question.</p>
+  <p>You can reach me at <a href="mailto:your-email@example.com" style="color: var(--accent)">your-email@example.com</a>, or connect with me on <a href="https://www.linkedin.com" style="color: var(--accent)">LinkedIn</a>.</p>
+`;
 
 /* ========================================================================= */
 
@@ -446,6 +486,14 @@ function renderArticle(a) {
   window.scrollTo(0, 0);
 }
 
+function renderAbout() {
+  view.innerHTML = `
+    <h1 class="article-title">About</h1>
+    <div class="article-body">${ABOUT_HTML}</div>
+  `;
+  window.scrollTo(0, 0);
+}
+
 function openAnalysis(id) {
   location.hash = id;
 }
@@ -454,9 +502,25 @@ function goHome() {
   location.hash = "";
 }
 
+function goAbout() {
+  location.hash = "about";
+}
+
 function route() {
-  const id = decodeURIComponent(location.hash.replace(/^#/, ""));
-  const a = id && ANALYSES.find(x => x.id === id);
+  const hash = decodeURIComponent(location.hash.replace(/^#/, ""));
+  const navHome = document.getElementById("nav-home");
+  const navAbout = document.getElementById("nav-about");
+  if (navHome) navHome.classList.remove("active");
+  if (navAbout) navAbout.classList.remove("active");
+
+  if (hash === "about") {
+    if (navAbout) navAbout.classList.add("active");
+    renderAbout();
+    return;
+  }
+
+  if (navHome) navHome.classList.add("active");
+  const a = hash && ANALYSES.find(x => x.id === hash);
   if (a) renderArticle(a);
   else renderList();
 }
